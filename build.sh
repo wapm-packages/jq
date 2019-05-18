@@ -7,18 +7,17 @@ cd jq-1.6
 # make distclean
 
 # Configure oniguruma
-(
-  cd modules/oniguruma
-  autoreconf -vfi
-)
+#(
+#  cd modules/oniguruma
+  autoreconf -fi
+#)
 
 # Configure and compile LLVM bitcode
 emconfigure ./configure \
   --disable-maintainer-mode \
-  --host=wasm32-unknown-emscripten \
   --with-oniguruma=builtin || exit $?
-emmake make || exit $?
+emmake make LDFLAGS=-all-static || exit $?
 
 # Generate `.wasm` file
-mv jq jq.bc
-emcc jq.bc -o jq.wasm
+mv jq jq.o
+emcc jq.o -o jq.wasm -s ERROR_ON_UNDEFINED_SYMBOLS=0
