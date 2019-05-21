@@ -2,9 +2,9 @@
 
 cd jq-1.6
 
-# # Clean previous compilation files
-# ./configure
-# make distclean
+# Clean previous compilation files
+./configure
+make distclean
 
 # Configure oniguruma
 #(
@@ -20,4 +20,4 @@ emmake make LDFLAGS=-all-static || exit $?
 
 # Generate `.wasm` file
 mv jq jq.o
-emcc jq.o -o jq.wasm -s ERROR_ON_UNDEFINED_SYMBOLS=0
+emcc jq.o -o ../jq.wasm -s ERROR_ON_UNDEFINED_SYMBOLS=0
