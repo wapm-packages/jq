@@ -1,11 +1,10 @@
 #!/usr/bin/env sh
 
-cd jq-1.6
+JQ_VERSION=1.6
 
-# Clean previous compilation files
-echo "Clean"
-./configure
-make distclean
+wget https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-${JQ_VERSION}.tar.gz
+tar xf jq-${JQ_VERSION}.tar.gz
+cd jq-${JQ_VERSION}
 
 echo "Configure"
 
@@ -27,5 +26,9 @@ emmake make LDFLAGS=-all-static || exit $?
 echo "Link"
 mv jq jq.o
 emcc jq.o -o ../jq.wasm -s ERROR_ON_UNDEFINED_SYMBOLS=0
+
+echo "Clean"
+cd ..
+rm -rf jq-${JQ_VERSION} jq-${JQ_VERSION}.tar.gz
 
 echo "Done"
