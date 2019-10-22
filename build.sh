@@ -1,34 +1,32 @@
 #!/usr/bin/env sh
 
-JQ_VERSION=1.6
+# Install wasienv
+curl https://raw.githubusercontent.com/wasienv/wasienv/master/install.sh | sh
 
-wget https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-${JQ_VERSION}.tar.gz
-tar xf jq-${JQ_VERSION}.tar.gz
-cd jq-${JQ_VERSION}
+# Build jq
+JQ_VERSION=1.6
+DIRECTORY="jq-${JQ_VERSION}"
+
+if [ ! -d "$DIRECTORY" ]; then
+  wget https://github.com/stedolan/jq/releases/download/jq-${JQ_VERSION}/jq-${JQ_VERSION}.tar.gz
+  tar xf jq-${JQ_VERSION}.tar.gz
+fi
+
+cd ${DIRECTORY}
 
 echo "Configure"
 
 # Configure oniguruma
-#(
-#  cd modules/oniguruma
-  autoreconf -fi
-#)
+(
+ cd modules/oniguruma
+ autoreconf -fi
+)
 
 # Configure and compile LLVM bitcode
-emconfigure ./configure \
+wasiconfigure ./configure \
   --disable-maintainer-mode \
   --with-oniguruma=builtin || exit $?
 
-echo "Build"
-emmake make LDFLAGS=-all-static || exit $?
-
-# Generate `.wasm` file
-echo "Link"
-mv jq jq.o
-emcc jq.o -o ../jq.wasm -s ERROR_ON_UNDEFINED_SYMBOLS=0
-
-echo "Clean"
-cd ..
-rm -rf jq-${JQ_VERSION} jq-${JQ_VERSION}.tar.gz
-
+# echo "Build"
+wasimake make LDFLAGS=-all-static || exit $?
 echo "Done"
