@@ -1,2 +1,5 @@
 jq-1.6
 *.gz
+/wapm.lock
+/wapm_packages
+/.DS_Store

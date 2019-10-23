@@ -1,0 +1,26 @@
+[package]
+name = "jq"
+version = "0.1.0"
+description = "jq is a lightweight and flexible command-line JSON processor."
+readme = "README.md"
+repository = "https://github.com/wapm-packages/jq"
+
+[[module]]
+name = "jq"
+source = "jq-1.6/jq.wasm"
+abi = "wasi"
+
+[module.interfaces]
+wasi = "0.0.0-unstable"
+
+# [[module]]
+# name = "libcrypto"
+# source = "libcrypto.wasm"
+
+# [[module]]
+# name = "libssl"
+# source = "libssl.wasm"
+
+[[command]]
+name = "jq"
+module = "jq"
